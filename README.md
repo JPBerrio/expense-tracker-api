@@ -38,7 +38,7 @@ Expense Tracker API es una aplicación diseñada para ayudar a los usuarios a ge
 ![image](https://github.com/user-attachments/assets/6c53bdbd-e25e-4292-9943-ba0a6ec528e2)
 
 
-##Endpoints
+## Endpoints
 ![image](https://github.com/user-attachments/assets/37f29ee2-227b-451a-b65d-4bc21a44f848)
 
 ![image](https://github.com/user-attachments/assets/b210e75a-86b7-4b0a-9ea4-e330e6a2ed19)
