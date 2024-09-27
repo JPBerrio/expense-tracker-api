@@ -32,7 +32,7 @@ Expense Tracker API es una aplicación diseñada para ayudar a los usuarios a ge
 - **Framework:** Spring Boot, Spring Security.
 - **Base de Datos:** PostgreSQL.
 - **ORM:** Model Mapper.
-- **Documentación** Swagger.
+- **Documentación:** Swagger.
 
 ## Arquitectura
 ![image](https://github.com/user-attachments/assets/6c53bdbd-e25e-4292-9943-ba0a6ec528e2)
