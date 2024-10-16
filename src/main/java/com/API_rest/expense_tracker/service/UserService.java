@@ -35,6 +35,10 @@ public class UserService {
         return this.userRepository.findById(idUser).orElse(null);
     }
 
+    public UserEntity findUserByUsername(String username) {
+        return this.userRepository.findByUsername(username);
+    }
+
     public Page<UserDTO> getAllUsers(int page, int elements) {
         Pageable pageable = PageRequest.of(page, elements);
         Page<UserEntity> userEntities = userRepository.findAll(pageable);

@@ -3,13 +3,10 @@ package com.API_rest.expense_tracker.web.controller;
 import com.API_rest.expense_tracker.web.config.JwUtil;
 import com.API_rest.expense_tracker.web.dto.LoginDTO;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +34,8 @@ public class LoginController {
 
         String jwt = this.jwUtil.create(loginDTO.getUsername());
 
-        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, jwt).build();
+        System.out.println("JWT generado: " + jwt);
+
+        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt).build();
     }
 }

@@ -24,6 +24,7 @@ public class UserSecurityService implements UserDetailsService {
             throw new UsernameNotFoundException("User" + username + " not found!");
         }
 
+
         String[] roles = userEntity.getRoles().stream().map(UserRoleEntity::getRole).toArray(String[]::new);
 
         return User.builder()
@@ -33,5 +34,13 @@ public class UserSecurityService implements UserDetailsService {
                 .accountLocked(userEntity.getLocked())
                 .disabled(userEntity.getDisabled())
                 .build();
+    }
+
+    public Long getIdUserByUsername(String username) {
+        UserEntity userEntity = this.userRepository.findByUsername(username);
+        if (userEntity != null) {
+            return userEntity.getIdUser();
+        }
+        return null;
     }
 }

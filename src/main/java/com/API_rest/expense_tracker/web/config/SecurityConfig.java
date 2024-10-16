@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(customizeRequests -> customizeRequests
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/users/register").permitAll()
-                        .requestMatchers("/api/expenses").hasRole("ADMIN")
+                        .requestMatchers("/api/expenses").permitAll()
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwFilter, UsernamePasswordAuthenticationFilter.class);

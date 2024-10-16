@@ -35,6 +35,5 @@ public class ExpenseEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_category")
-    @JsonIgnore
     private ExpenseCategoryEntity expenseCategoryEntity;
 }

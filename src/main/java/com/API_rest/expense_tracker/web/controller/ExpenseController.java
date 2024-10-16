@@ -1,10 +1,15 @@
 package com.API_rest.expense_tracker.web.controller;
 
 import com.API_rest.expense_tracker.persistence.entities.ExpenseEntity;
+import com.API_rest.expense_tracker.persistence.entities.UserEntity;
 import com.API_rest.expense_tracker.service.ExpenseService;
+import com.API_rest.expense_tracker.service.UserService;
 import com.API_rest.expense_tracker.web.dto.ExpenseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -15,15 +20,31 @@ import java.util.List;
 @RequestMapping("/api/expenses")
 public class ExpenseController {
     private final ExpenseService expenseService;
+    private final UserService userService;
 
-    public ExpenseController(ExpenseService expenseService) {
+    public ExpenseController(ExpenseService expenseService, UserService userService) {
         this.expenseService = expenseService;
+        this.userService = userService;
     }
 
     @GetMapping
-    public ResponseEntity<Page<ExpenseEntity>> getAllExpenses(@RequestParam(defaultValue = "0") int page,
-                                              @RequestParam(defaultValue = "10") int elements) {
-        return ResponseEntity.ok(expenseService.getAllExpenses(page, elements));
+    public ResponseEntity<Page<ExpenseEntity>> getExpensesByUser(@RequestParam(defaultValue = "0") int page,
+                                                                 @RequestParam(defaultValue = "9") int elements
+                                                                 ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new UsernameNotFoundException("User not authenticated.");
+        }
+
+        String username = authentication.getName();
+        UserEntity user = userService.findUserByUsername(username);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found: " + username);
+        }
+
+        return ResponseEntity.ok(expenseService.getExpensesByUser(user.getIdUser(), page, elements));
     }
 
     @GetMapping("/users/{idUser}/last-week")

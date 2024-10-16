@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ExpenseService {
@@ -28,12 +29,15 @@ public class ExpenseService {
         this.expenseCategoryRepository = expenseCategoryRepository;
     }
 
+
     public Page<ExpenseEntity> getAllExpenses(int page, int elements) {
         Pageable pageable = PageRequest.of(page, elements);
         return expenseRepository.findAll(pageable);
     }
 
-    public Page<ExpenseEntity> getExpensesByUser(UserEntity user, int page, int elements) {
+    public Page<ExpenseEntity> getExpensesByUser(Long idUser, int page, int elements) {
+        UserEntity user = userRepository.findById(idUser)
+                .orElseThrow(() -> new RuntimeException("User not found"));
         return expenseRepository.findByUserEntity(user, PageRequest.of(page, elements));
     }
 
@@ -100,7 +104,11 @@ public class ExpenseService {
         return expenseRepository.findByUserEntityIdUserAndExpenseDateBetween(idUser, startDate, endDate);
     }
 
+    @Transactional
     public void deleteExpense(long idExpense) {
+        if (!expenseRepository.existsById(idExpense)) {
+            throw new RuntimeException("Expense not found");
+        }
         expenseRepository.deleteById(idExpense);
     }
 }
