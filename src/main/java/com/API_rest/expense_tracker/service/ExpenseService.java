@@ -46,7 +46,7 @@ public class ExpenseService {
         UserEntity user = userRepository.findById(expenseDTO.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        ExpenseCategoryEntity category = expenseCategoryRepository.findById(expenseDTO.getIdCategory())
+        ExpenseCategoryEntity category = expenseCategoryRepository.findById(expenseDTO.getExpenseCategoryEntity().getIdCategory())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
         ExpenseEntity expenseEntity = ExpenseEntity.builder()
@@ -67,10 +67,10 @@ public class ExpenseService {
 
         existingExpense.setExpenseName(expenseDTO.getExpenseName());
         existingExpense.setExpenditureAmount(expenseDTO.getExpenditureAmount());
-        existingExpense.setExpenseDate(LocalDate.now());
+        existingExpense.setExpenseDate(expenseDTO.getExpenseDate());
 
-        if (expenseDTO.getIdCategory() != null) {
-            ExpenseCategoryEntity category = expenseCategoryRepository.findById(expenseDTO.getIdCategory())
+        if (expenseDTO.getExpenseCategoryEntity() != null) {
+            ExpenseCategoryEntity category = expenseCategoryRepository.findById(expenseDTO.getExpenseCategoryEntity().getIdCategory())
                     .orElseThrow(()-> new RuntimeException("Category not found"));
             existingExpense.setExpenseCategoryEntity(category);
         }
