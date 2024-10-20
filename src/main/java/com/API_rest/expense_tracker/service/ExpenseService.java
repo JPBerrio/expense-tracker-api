@@ -10,6 +10,8 @@ import com.API_rest.expense_tracker.web.dto.ExpenseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,8 +45,13 @@ public class ExpenseService {
 
     @Transactional
     public ExpenseEntity createExpense(ExpenseDTO expenseDTO) {
-        UserEntity user = userRepository.findById(expenseDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        UserEntity user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
 
         ExpenseCategoryEntity category = expenseCategoryRepository.findById(expenseDTO.getExpenseCategoryEntity().getIdCategory())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
@@ -54,7 +61,7 @@ public class ExpenseService {
                 .expenditureAmount(expenseDTO.getExpenditureAmount())
                 .userEntity(user)
                 .expenseCategoryEntity(category)
-                .expenseDate(LocalDate.now())
+                .expenseDate(expenseDTO.getExpenseDate())
                 .build();
 
         return expenseRepository.save(expenseEntity);

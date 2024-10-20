@@ -15,7 +15,6 @@ import java.time.LocalDate;
 public class ExpenseDTO {
     private String expenseName;
     private Double expenditureAmount;
-    private Long userId;
     private ExpenseCategoryDTO expenseCategoryEntity;
     private LocalDate expenseDate;
 }
