@@ -89,26 +89,42 @@ public class ExpenseService {
         return expenseRepository.existsById(idExpense);
     }
 
-    public List<ExpenseEntity> getExpenseForLastWeek(Long idUser) {
+    public Page<ExpenseEntity> getExpenseForLastWeek(String username, int page, int elements) {
+        UserEntity user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
         LocalDate endDate = LocalDate.now();
         LocalDate startDate = endDate.minusDays(7);
-        return expenseRepository.findByUserEntityIdUserAndExpenseDateBetween(idUser, startDate, endDate);
+        return expenseRepository.findByUserEntityIdUserAndExpenseDateBetween(user.getIdUser(), startDate, endDate, PageRequest.of(page, elements));
     }
 
-    public List<ExpenseEntity> getExpenseForLastMonth(Long idUser) {
+    public Page<ExpenseEntity> getExpenseForLastMonth(String username, int page, int elements) {
+        UserEntity user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
         LocalDate endDate = LocalDate.now();
         LocalDate startDate = endDate.minusMonths(1);
-        return expenseRepository.findByUserEntityIdUserAndExpenseDateBetween(idUser, startDate, endDate);
+        return expenseRepository.findByUserEntityIdUserAndExpenseDateBetween(user.getIdUser(), startDate, endDate, PageRequest.of(page, elements));
     }
 
-    public List<ExpenseEntity> getExpenseForLastThreeMonths(Long idUser) {
+    public Page<ExpenseEntity> getExpenseForLastThreeMonths(String username, int page, int elements) {
+        UserEntity user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
         LocalDate endDate = LocalDate.now();
         LocalDate startDate = endDate.minusMonths(3);
-        return expenseRepository.findByUserEntityIdUserAndExpenseDateBetween(idUser, startDate, endDate);
+        return expenseRepository.findByUserEntityIdUserAndExpenseDateBetween(user.getIdUser(), startDate, endDate, PageRequest.of(page, elements));
     }
 
-    public List<ExpenseEntity> getExpensesByDateRange(Long idUser, LocalDate startDate, LocalDate endDate) {
-        return expenseRepository.findByUserEntityIdUserAndExpenseDateBetween(idUser, startDate, endDate);
+    public Page<ExpenseEntity> getExpensesByDateRange(String username, LocalDate startDate, LocalDate endDate, int page, int elements) {
+        UserEntity user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        return expenseRepository.findByUserEntityIdUserAndExpenseDateBetween(user.getIdUser(), startDate, endDate, PageRequest.of(page, elements));
     }
 
     @Transactional
