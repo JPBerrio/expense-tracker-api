@@ -12,4 +12,5 @@ import java.util.List;
 public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long> {
     Page<ExpenseEntity> findByUserEntityIdUserAndExpenseDateBetween(Long idUser, LocalDate starDate, LocalDate endDate, Pageable pageable);
     Page<ExpenseEntity> findByUserEntity(UserEntity userEntity, Pageable pageable);
+    List<ExpenseEntity> findByUserEntityIdUser(Long userId);
 }

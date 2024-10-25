@@ -44,11 +44,19 @@ public class ExpenseController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ExpenseEntity>> getExpensesByUser(@RequestParam(defaultValue = "0") int page,
-                                                                 @RequestParam(defaultValue = "9") int elements
-                                                                 ) {
+    public ResponseEntity<?> getExpensesByUser(@RequestParam(defaultValue = "0") int page,
+                                                                 @RequestParam(defaultValue = "9") int elements,
+                                                                 @RequestParam(defaultValue = "false") boolean fetchAll) {
         UserEntity user = getAuthenticatedUser();
-        return ResponseEntity.ok(expenseService.getExpensesByUser(user.getIdUser(), page, elements));
+
+        if (fetchAll) {
+            // Obtén todos los gastos para el usuario
+            List<ExpenseEntity> expenses = expenseService.getAllExpensesByUser(user.getIdUser());
+            return ResponseEntity.ok(expenses);
+        } else {
+            // Si no se solicita todos, devuelve con paginación
+            return ResponseEntity.ok(expenseService.getExpensesByUser(user.getIdUser(), page, elements));
+        }
     }
 
     @GetMapping("/users/last-week")

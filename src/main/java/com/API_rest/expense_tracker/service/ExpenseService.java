@@ -43,6 +43,10 @@ public class ExpenseService {
         return expenseRepository.findByUserEntity(user, PageRequest.of(page, elements));
     }
 
+    public List<ExpenseEntity> getAllExpensesByUser(Long userId) {
+        return expenseRepository.findByUserEntityIdUser(userId);
+    }
+
     @Transactional
     public ExpenseEntity createExpense(ExpenseDTO expenseDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
