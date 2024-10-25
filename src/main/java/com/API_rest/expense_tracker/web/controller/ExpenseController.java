@@ -27,10 +27,7 @@ public class ExpenseController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public ResponseEntity<Page<ExpenseEntity>> getExpensesByUser(@RequestParam(defaultValue = "0") int page,
-                                                                 @RequestParam(defaultValue = "9") int elements
-                                                                 ) {
+    private UserEntity getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -39,69 +36,41 @@ public class ExpenseController {
 
         String username = authentication.getName();
         UserEntity user = userService.findUserByUsername(username);
-
         if (user == null) {
             throw new UsernameNotFoundException("User not found: " + username);
         }
 
+        return user;
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ExpenseEntity>> getExpensesByUser(@RequestParam(defaultValue = "0") int page,
+                                                                 @RequestParam(defaultValue = "9") int elements
+                                                                 ) {
+        UserEntity user = getAuthenticatedUser();
         return ResponseEntity.ok(expenseService.getExpensesByUser(user.getIdUser(), page, elements));
     }
 
     @GetMapping("/users/last-week")
     public ResponseEntity<Page<ExpenseEntity>> getExpensesForLastWeek(@RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "9") int elements) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new UsernameNotFoundException("User not authenticated.");
-        }
-
-        String username = authentication.getName();
-        UserEntity user = userService.findUserByUsername(username);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found: " + username);
-        }
-
-        return ResponseEntity.ok(expenseService.getExpenseForLastWeek(username, page, elements));
+        UserEntity user = getAuthenticatedUser();
+        return ResponseEntity.ok(expenseService.getExpenseForLastWeek(user.getUsername(), page, elements));
     }
 
     @GetMapping("/users/last-month")
     public ResponseEntity<Page<ExpenseEntity>> getExpensesForLastMonth(@RequestParam(defaultValue = "0") int page,
                                                                        @RequestParam(defaultValue = "9") int elements) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new UsernameNotFoundException("User not authenticated.");
-        }
-
-        String username = authentication.getName();
-        UserEntity user = userService.findUserByUsername(username);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found: " + username);
-        }
-
-        return ResponseEntity.ok(expenseService.getExpenseForLastMonth(username, page, elements));
+        UserEntity user = getAuthenticatedUser();
+        return ResponseEntity.ok(expenseService.getExpenseForLastMonth(user.getUsername(), page, elements));
     }
 
     @GetMapping("/users/last-three-months")
     public ResponseEntity<Page<ExpenseEntity>> getExpensesForLastThreeMonths(@RequestParam(defaultValue = "0") int page,
                                                                              @RequestParam(defaultValue = "9") int elements) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new UsernameNotFoundException("User not authenticated.");
-        }
-
-        String username = authentication.getName();
-        UserEntity user = userService.findUserByUsername(username);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found: " + username);
-        }
-
-        return ResponseEntity.ok(expenseService.getExpenseForLastThreeMonths(username, page, elements));
+        UserEntity user = getAuthenticatedUser();
+        return ResponseEntity.ok(expenseService.getExpenseForLastThreeMonths(user.getUsername(), page, elements));
     }
 
     @GetMapping("/users/filter")
@@ -109,20 +78,8 @@ public class ExpenseController {
                                                                       @RequestParam("endDate") LocalDate endDate,
                                                                       @RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "9") int elements) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new UsernameNotFoundException("User not authenticated.");
-        }
-
-        String username = authentication.getName();
-        UserEntity user = userService.findUserByUsername(username);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found: " + username);
-        }
-
-        return ResponseEntity.ok(expenseService.getExpensesByDateRange(username, startDate, endDate, page, elements));
+        UserEntity user = getAuthenticatedUser();
+        return ResponseEntity.ok(expenseService.getExpensesByDateRange(user.getUsername(), startDate, endDate, page, elements));
     }
 
     @PostMapping
